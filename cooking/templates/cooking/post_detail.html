@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="d-flex justify-content-between">
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        {{ post.category }}
+        <div>
+          {% if request.user == post.author %}
+          <a class="btn btn-dark" href="{% url 'delete_post' post.pk %}">Delete</a>
+          <a class="btn btn-dark" href="{% url 'update_post' post.pk %}">Edit</a>
+          {% endif %}
+          <a class="btn btn-dark" href="{% url 'category_list' post.category.pk %}">Back</a>
+        </div>
+      </div>
+      <img class="card-img-top" src="" alt=""/>
+      <div class="card-body">
+        {% if post.photo %}
+        <img
+          src="{{ post.photo.url }}"
+          width="300"
+          alt=""/>
+        {% else %}
+        <img
+          src="https://static.wixstatic.com/media/d8d60b_6ff8d8667db1462492d681839d85054c~mv2.png/v1/fill/w_900%2Ch_900%2Cal_c%2Cq_90/file.jpg"
+          width="300"
+          alt=""/>
+        {% endif %}
+        <h5 class="card-title">
+          {{ post }}
+        </h5>
+        <p class="card-text">
+          {{ post.content | linebreaks }}
+        </p>
+      </div>
+      <div class="card-footer d-flex justify-content-between">
+        <p class="card-text">
+          {{ post.created_at }}
+        </p>
+        <a href="{% url 'profile' post.author.pk %}">
+          {{ post.author }}
+        </a>
+        <p class="card-text">
+          {{ post.watched }}
+        </p>
+      </div>
+    </div>
+    <hr />
+
+    <!-- Reviews -->
+    {% if request.user.is_authenticated %}
+    <form action="{% url 'add_comment' post.pk %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% include 'components/_form_errors.html' %}
+      {{ comment_form.text }}
+      <button class="btn btn-dark" type="submit">Add a comment</button>
+    </form>
+    {% endif %}
+    {% for comment in comments %}
+    <div class="card mt-2">
+      <h5 class="card-header">{{ comment.user }} ({{ comment.created_at }})</h5>
+      <div class="card-body">
+        <p class="card-text">{{ comment }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Recommendation -->
+  <div class="col-1"></div>
+  <div class="col-4">
+    {% for additional in additional_posts %}
+    <div class="card" style="width: 18rem">
+      {% if additional.photo %}
+      <img
+        src="{{ additional.photo.url }}"
+        width="300"
+        alt=""/>
+      {% else %}
+      <img
+        class="card-img-top"
+        src="https://static.wixstatic.com/media/d8d60b_6ff8d8667db1462492d681839d85054c~mv2.png/v1/fill/w_900%2Ch_900%2Cal_c%2Cq_90/file.jpg"
+        width="200"
+        alt=""/>
+       {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ additional.title }}</h5>
+        <a class="btn btn-primary" href="{{ additional.get_absolute_url }}">Read more</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock main %}

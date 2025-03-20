@@ -1,0 +1,9 @@
+<div class="card text-center">
+  <div class="card-header">{{ post.category }}</div>
+    <div class="card-body">
+      <h5 class="card-title">{{ post }}</h5>
+      <p class="card-text">{{ post.content | truncatewords:20 }}</p>
+      <a class="btn btn-primary" href="{{ post.get_absolute_url }}">More details</a>
+    </div>
+  <div class="card-footer text-muted">{{ post.created_at }}</div>
+</div>
