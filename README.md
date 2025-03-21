@@ -1,6 +1,6 @@
 # Culinary portal - Cooking
 ### Implemented:
-* Review system
+* Comment system
 * Information messages
 * Search for occurrence of a given substring in the text of a post
 * A recommendation system based on post view counts
